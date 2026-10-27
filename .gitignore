@@ -1,0 +1,13 @@
+node_modules/
+dist/
+.DS_Store
+Thumbs.db
+*.log
+*.zip
+.env
+.env.*
+.codex/
+.agents/
+.codebase-memory/
+.git-metadata/
+vendor/

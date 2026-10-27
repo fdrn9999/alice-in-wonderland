@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#ead9d5">
+  <meta name="description" content="WONDERLAND — A Liminal Dream. 밝고 낯선 카드 미궁을 탐험하는 3인칭 3D 어드벤처.">
+  <title>WONDERLAND — A Liminal Dream</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23f5e8e3'/%3E%3Ctext x='12' y='47' font-size='48' fill='%23b6576e'%3E♠%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="style.css">
+  <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js"}}</script>
+</head>
+<body>
+  <div id="scene" aria-label="3D 이상한 나라 탐험 게임"></div>
+  <div class="film-grain" aria-hidden="true"></div>
+  <header class="topbar">
+    <a class="brand" href="./" aria-label="Wonderland 홈"><span class="brand-mark">♠</span><span>WONDERLAND<small>A LIMINAL DREAM</small></span></a>
+    <div class="world-status"><span class="live-dot"></span> SOMEWHERE OUTSIDE OF TIME <span class="status-line"></span><span id="world-time">11 : 59</span></div>
+    <nav class="tools" aria-label="게임 설정"><button id="sound" title="환경음 켜기 / 끄기 (M)" aria-label="환경음 켜기" aria-pressed="false">♪<span>SOUND OFF</span></button><button id="map-open" title="지도 (Tab)" aria-label="탐험 지도 열기">⌘</button><button id="settings-open" title="설정" aria-label="설정 열기">⚙</button></nav>
+  </header>
+  <aside class="objective"><span class="eyebrow">A LITTLE LOST, ARE WE?</span><p>잃어버린 시간을 찾아서</p><div class="memory-track" aria-label="기억 조각 수집 진행"><span>◇</span><span>◇</span><span>◇</span><span>◇</span><span>◇</span><small id="memory-count">0 / 5</small></div><span class="objective-note">다섯 장소에 남겨진 기억을 모으세요.</span></aside>
+  <div class="chapter-rail" aria-hidden="true"><span>THE DREAM</span><i></i><b id="rail-number">01</b><i></i><span>GOES ON</span></div>
+  <div id="area-intro" class="area-intro" aria-live="polite"></div>
+  <div id="interaction" class="interaction" hidden><kbd>E</kbd><span></span></div>
+  <div id="toast" class="toast" role="status"></div>
+  <footer class="hud">
+    <div class="location"><span class="eyebrow"><span id="area-number">CHAPTER 01</span><i></i> YOU ARE HERE</span><h1 id="area-name">The Infinite Courtyard</h1><p id="area-subtitle">모든 길은 어딘가로 이어집니다. 아마도.</p></div>
+    <div class="controls"><div><span class="key-group"><kbd>W</kbd><span><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd></span></span><small>이동</small></div><i></i><div><kbd class="wide">SPACE</kbd><small>점프</small></div><div><kbd class="wide">SHIFT</kbd><small>달리기</small></div><i></i><div class="mouse-hint"><span>◉</span><small>드래그 · 시점</small></div><div><kbd>R</kbd><small>돌아가기</small></div></div>
+    <div class="compass"><div class="compass-circle"><span>N</span><b id="compass-needle">↑</b><i>✧</i></div><span id="coordinates">000 · 000</span></div>
+  </footer>
+  <div id="start-screen" class="overlay welcome">
+    <div class="welcome-card"><div class="ornament">✧ <span>DOWN THE RABBIT HOLE</span> ✧</div><span class="welcome-script">Welcome to</span><h2>Wonderland<span>A LIMINAL DREAM</span></h2><p class="welcome-quote">“여기서는, 길을 잃어도 괜찮아요.”</p><p class="welcome-description">햇빛에 잠긴 회랑, 멈춰 있는 병사들,<br>그리고 당신을 기다리는 다섯 개의 기억.</p><button id="start" class="primary" disabled><span>꿈을 불러오는 중</span><b>↗</b></button><div class="welcome-foot">3D EXPLORATION <span>◇</span> TAKE YOUR TIME</div><p class="desktop-note">WASD 이동 · 마우스 드래그로 둘러보기 · E 상호작용</p></div>
+  </div>
+  <dialog id="map-dialog"><button class="close-dialog" aria-label="지도 닫기">×</button><span class="eyebrow">AN UNRELIABLE GUIDE</span><h2>꿈의 지도</h2><p>같은 장소라도, 같은 꿈은 아닐지 몰라요.</p><div id="map-layout" class="map-layout"><svg viewBox="0 0 500 340" aria-hidden="true"><path d="M250 240 L100 240 M250 240 L400 240 M250 240 L250 140 L250 60"/></svg><button data-area="0" style="--x:50%;--y:73%"><b>01</b><span>Infinite Courtyard</span></button><button data-area="1" style="--x:82%;--y:73%"><b>02</b><span>Card Soldiers' Parade</span></button><button data-area="2" style="--x:50%;--y:43%"><b>03</b><span>Endless Staircase</span></button><button data-area="3" style="--x:50%;--y:13%"><b>04</b><span>White Rabbit's Hall</span></button><button data-area="4" style="--x:18%;--y:73%"><b>05</b><span>Forgotten Tea Party</span></button></div><p class="dialog-hint">발견한 장소를 누르면 체크포인트로 이동합니다. <kbd>Tab</kbd> 닫기</p></dialog>
+  <dialog id="settings-dialog"><button class="close-dialog" aria-label="설정 닫기">×</button><span class="eyebrow">MAKE YOURSELF AT HOME</span><h2>꿈의 설정</h2><label>그래픽 품질<select id="quality"><option value="high">높음 · 부드러운 그림자</option><option value="low">가벼움 · 성능 우선</option></select></label><label>마우스 감도<input id="sensitivity" type="range" min="0.4" max="2" value="1" step="0.1"></label><label>환경음 볼륨<input id="volume" type="range" min="0" max="0.6" value="0.25" step="0.01"></label><label class="check-label"><input type="checkbox" id="invert"> 수직 카메라 반전</label><button id="pointer-lock" class="secondary">마우스 잠금으로 플레이</button><p class="dialog-hint">기본: 마우스 드래그로 회전 · 휠로 거리 조절<br>잠금 모드: 마우스 이동으로 회전 · ESC 해제<br>M 환경음 · Tab 지도 · R 체크포인트 복귀<br>진행 상황은 이 브라우저에 자동 저장됩니다.</p><button id="reset" class="text-button">새로운 꿈 시작 · 진행 초기화</button></dialog>
+  <dialog id="ending-dialog"><button class="close-dialog" aria-label="닫기">×</button><div class="ending-symbol">♧</div><span class="eyebrow">ALL THE TIME IN THE WORLD</span><h2>당신은 길을 잃지 않았어요.</h2><p>다섯 조각의 시간이 다시 하나가 되었습니다.<br>토끼는 시계를 내려놓고, 병사들은 잠시 눈을 돌립니다.<br>꿈은 끝나지 않았어요. 이제, 천천히 걸어도 괜찮아요.</p><button id="continue" class="primary">조금 더 머무르기 <b>↗</b></button></dialog>
+  <div id="error" class="error" role="alert" hidden></div>
+  <script type="module" src="src/main.js"></script>
+  <script>function loadError(message){if(!document.body.dataset.ready){const el=document.getElementById('error');el.hidden=false;el.textContent='3D 게임을 불러오지 못했습니다. 정적 서버 실행과 인터넷 연결을 확인해 주세요. '+message;}}window.addEventListener('error',e=>{if(e.message)loadError(e.message);},true);window.addEventListener('unhandledrejection',e=>loadError(String(e.reason||'')));setTimeout(()=>{if(!document.body.dataset.ready)loadError('Three.js CDN 접근을 확인한 뒤 새로고침하세요.');},20000);</script>
+</body>
+</html>
