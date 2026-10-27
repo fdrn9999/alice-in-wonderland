@@ -1,0 +1,10 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {PhysicsWorld,PlayerBody} from '../src/physics.js';
+function advance(body,seconds,dx=0,dz=0,speed=4.25){for(let i=0;i<seconds*90;i++)body.step(1/90,dx,dz,speed);}
+test('player rests on the marble, jumps, falls and lands',()=>{const world=new PhysicsWorld();world.addBox(0,-.5,0,30,1,30);const p=new PlayerBody(world,0,0,0);advance(p,1);assert.equal(p.position.y,0);assert.equal(p.jump(),true);advance(p,.2);assert.ok(p.position.y>1);assert.equal(p.jump(),false);advance(p,1.5);assert.equal(p.grounded,true);assert.equal(p.position.y,0);});
+test('all thirty-six steps can be ascended and descended continuously',()=>{const w=new PhysicsWorld();w.addBox(0,-.5,3,8,1,6);for(let i=0;i<36;i++)w.addBox(0,(i+1)/3-.19,-(i+.5)*.625,8,.38,.65);w.addBox(0,11.6,-26,14,.8,7);const p=new PlayerBody(w,0,0,2);advance(p,6.8,0,-1);assert.ok(p.position.y>=11.99);assert.ok(p.position.z<-23);advance(p,6.8,0,1);assert.ok(p.position.y<.4);assert.equal(p.grounded,true);});
+test('walls block horizontal movement, including while airborne',()=>{const w=new PhysicsWorld();w.addBox(0,-.5,0,30,1,30);w.addBox(3,3,0,1,6,20);const p=new PlayerBody(w,0,0,0);advance(p,2,1,0,7.3);assert.ok(p.position.x<2.2);p.jump();advance(p,.6,1,0);assert.ok(p.position.x<2.2);});
+test('ceiling stops an upward jump',()=>{const w=new PhysicsWorld();w.addBox(0,-.5,0,20,1,20);w.addBox(0,2.5,0,10,.2,10);const p=new PlayerBody(w,0,0,0);p.jump();advance(p,.2);assert.ok(p.position.y<=.651);advance(p,1);assert.equal(p.grounded,true);});
+test('falling into the sky resets to the last checkpoint',()=>{const w=new PhysicsWorld();w.addBox(0,-.5,0,4,1,4);const p=new PlayerBody(w,0,0,0);p.teleport({x:20,y:-21.9,z:0});advance(p,.4);assert.ok(Math.abs(p.position.x)<.01);assert.equal(p.grounded,true);});
+test('walking off a high ledge does not magnetize player onto a lower floor',()=>{const w=new PhysicsWorld();w.addBox(0,4.5,0,4,1,4);w.addBox(0,-.5,0,30,1,30);const p=new PlayerBody(w,0,5,0);advance(p,.8,1,0);assert.ok(p.position.y>1);assert.equal(p.grounded,false);advance(p,1);assert.equal(p.position.y,0);});
