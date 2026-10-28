@@ -11,3 +11,4 @@ Thumbs.db
 .codebase-memory/
 .git-metadata/
 vendor/
+.fablize/

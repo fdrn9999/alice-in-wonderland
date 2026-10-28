@@ -11,5 +11,9 @@ export class DreamAudio {
     if(this.tickTime>1.08){this.tickTime=0;if(area===3||Math.random()<.23)this.tone(this.note%2?1300:1900,.06,.018,'triangle',false);}
     if(speed>.5&&grounded&&this.stepTime>(speed>5?.28:.42)){this.stepTime=0;this.tone(150+Math.random()*55,.065,.026,'triangle',false);}
   }
+  sweep(from,to,duration,amp=.05,type='sine'){if(!this.ctx||!this.enabled)return;const now=this.ctx.currentTime;const o=this.ctx.createOscillator(),g=this.ctx.createGain();o.type=type;o.frequency.setValueAtTime(from,now);o.frequency.exponentialRampToValueAtTime(to,now+duration);g.gain.setValueAtTime(.0001,now);g.gain.exponentialRampToValueAtTime(amp,now+.01);g.gain.exponentialRampToValueAtTime(.0001,now+duration);o.connect(g);g.connect(this.master);o.start();o.stop(now+duration+.03);}
+  jump(){this.sweep(330,620,.16,.04,'triangle');}
+  land(impact){this.tone(110+Math.random()*20,.09,Math.min(.07,.015+impact*.006),'triangle',false);}
+  shard(combo){const scale=[1046.5,1174.66,1318.51,1567.98,1760,2093];const f=scale[Math.min(combo,scale.length-1)];this.tone(f,.5,.07);this.tone(f*1.5,.35,.025,'triangle');}
   collect(){[523.25,659.25,783.99,1046.5].forEach((f,i)=>setTimeout(()=>this.tone(f,1.8,.12),i*140));}
 }
